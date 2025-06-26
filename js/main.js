@@ -1,27 +1,47 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Set current year in footer
-    document.getElementById('current-year').textContent = new Date().getFullYear();
+    // Set current year in footer (if element exists)
+    const currentYearElement = document.getElementById('current-year');
+    if (currentYearElement) {
+        currentYearElement.textContent = new Date().getFullYear();
+    }
     
     // Accordion functionality for proposal requirements
     const accordionItems = document.querySelectorAll('.accordion-item');
     
     accordionItems.forEach(item => {
         const header = item.querySelector('.accordion-header');
+        const content = item.querySelector('.accordion-content');
         
-        header.addEventListener('click', () => {
-            // Toggle active class
-            item.classList.toggle('active');
-            
-            // Update icon
-            const icon = header.querySelector('.toggle-icon i');
-            if (item.classList.contains('active')) {
-                icon.classList.remove('fa-plus');
-                icon.classList.add('fa-minus');
-            } else {
-                icon.classList.remove('fa-minus');
-                icon.classList.add('fa-plus');
-            }
-        });
+        if (header && content) {
+            header.addEventListener('click', () => {
+                // Close other accordion items
+                accordionItems.forEach(otherItem => {
+                    if (otherItem !== item && otherItem.classList.contains('active')) {
+                        otherItem.classList.remove('active');
+                        const otherIcon = otherItem.querySelector('.toggle-icon i');
+                        if (otherIcon) {
+                            otherIcon.classList.remove('fa-minus');
+                            otherIcon.classList.add('fa-plus');
+                        }
+                    }
+                });
+                
+                // Toggle current item
+                item.classList.toggle('active');
+                
+                // Update icon
+                const icon = header.querySelector('.toggle-icon i');
+                if (icon) {
+                    if (item.classList.contains('active')) {
+                        icon.classList.remove('fa-plus');
+                        icon.classList.add('fa-minus');
+                    } else {
+                        icon.classList.remove('fa-minus');
+                        icon.classList.add('fa-plus');
+                    }
+                }
+            });
+        }
     });
     
     // Smooth scrolling for navigation links
